@@ -3,7 +3,6 @@ package org.scrumbucket.crawler4neo;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.net.MalformedURLException;
@@ -35,39 +34,12 @@ public class GrabPage implements Callable<GrabPage> {
 		System.out.println("Visiting (" + depth + "): " + url.toString());
 		document = Jsoup.parse(url, TIMEOUT);
 
-		processLinksStream(document.select("a[href]"));
+		processLinks(document.select("a[href]"));
 
 		return this;
 	}
 
 	private void processLinks(Elements links) {
-		for (Element link : links) {
-			String href = link.attr("href");
-			if (StringUtils.isNotBlank(href) && !href.startsWith("#")) {
-				try {
-					URL nextUrl = new URL(url, href);
-					urlList.add(nextUrl);
-				} catch (MalformedURLException e) { // ignore bad urls
-				}
-			}
-		}
-	}
-
-	private void processLinksForEach(Elements links) {
-		links.forEach(link -> {
-					String href = link.attr("href");
-					if (StringUtils.isNotBlank(href) && !href.startsWith("#")) {
-						try {
-							URL nextUrl = new URL(url, href);
-							urlList.add(nextUrl);
-						} catch (MalformedURLException e) { // ignore bad urls
-						}
-					}
-				}
-		);
-	}
-
-	private void processLinksStream(Elements links) {
 		links.stream().
 				filter(link ->
 				{
