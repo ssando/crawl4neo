@@ -35,7 +35,7 @@ public class GrabPage implements Callable<GrabPage> {
 		System.out.println("Visiting (" + depth + "): " + url.toString());
 		document = Jsoup.parse(url, TIMEOUT);
 
-		processLinks(document.select("a[href]"));
+		processLinksStream(document.select("a[href]"));
 
 		return this;
 	}
@@ -51,6 +51,37 @@ public class GrabPage implements Callable<GrabPage> {
 				}
 			}
 		}
+	}
+
+	private void processLinksForEach(Elements links) {
+		links.forEach(link -> {
+					String href = link.attr("href");
+					if (StringUtils.isNotBlank(href) && !href.startsWith("#")) {
+						try {
+							URL nextUrl = new URL(url, href);
+							urlList.add(nextUrl);
+						} catch (MalformedURLException e) { // ignore bad urls
+						}
+					}
+				}
+		);
+	}
+
+	private void processLinksStream(Elements links) {
+		links.stream().
+				filter(link ->
+				{
+					String href = link.attr("href");
+					return (StringUtils.isNotBlank(href)) && !href.startsWith("#");
+				}).
+				forEach(link -> {
+					try {
+						String href = link.attr("href");
+						URL nextUrl = new URL(url, href);
+						urlList.add(nextUrl);
+					} catch (MalformedURLException e) { // ignore bad urls
+					}
+				});
 	}
 
 	public Set<URL> getUrlList() {
