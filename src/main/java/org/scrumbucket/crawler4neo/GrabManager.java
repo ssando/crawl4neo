@@ -121,4 +121,8 @@ public class GrabManager {
 	public void write(String path) throws IOException {
 		FileUtils.writeLines(new File(path), masterList);
 	}
+
+	public Set<URL> getMasterList() {
+		return masterList;
+	}
 }
