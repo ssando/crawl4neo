@@ -33,9 +33,7 @@ public class GrabPage implements Callable<GrabPage> {
 		Document document = null;
 		System.out.println("Visiting (" + depth + "): " + url.toString());
 		document = Jsoup.parse(url, TIMEOUT);
-
 		processLinks(document.select("a[href]"));
-
 		return this;
 	}
 
