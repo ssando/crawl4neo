@@ -12,34 +12,38 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<powermock.version>1.6.1</powermock.version>
-
+		<junit.version>4.11</junit.version>
+		<jsoup.version>1.7.1</jsoup.version>
+		<commons-lang3.version>3.0</commons-lang3.version>
+		<commons-io.version>2.4</commons-io.version>
+		<mockito-all.version>1.10.8</mockito-all.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>${junit.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.7.1</version>
+			<version>${jsoup.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.0</version>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
+			<version>${commons-io.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.10.8</version>
+			<version>${mockito-all.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
@@ -53,8 +57,6 @@
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
-
-
 	</dependencies>
 
 </project>

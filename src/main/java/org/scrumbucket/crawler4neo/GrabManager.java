@@ -2,7 +2,6 @@ package org.scrumbucket.crawler4neo;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.StopWatch;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,42 +12,35 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.BiPredicate;
 
 public class GrabManager {
-	public static final int THREAD_COUNT = 5;
+	private static final int THREAD_COUNT = 5;
+	private final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
 	private static final long PAUSE_TIME = 1000;
-
-	private Set<URL> masterList = new HashSet<>();
-	private List<Future<GrabPage>> futures = new ArrayList<>();
-	private ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-
-	private String urlBase;
-
-	private final int maxDepth;
+	private final Set<URL> masterList = new HashSet<>();
+	private final List<Future<GrabPage>> futures = new ArrayList<>();
 	private final int maxUrls;
+	private final BiPredicate<URL, Integer> shouldVisit;
 
-	public GrabManager(int maxDepth, int maxUrls) {
-		this.maxDepth = maxDepth;
-		this.maxUrls  = maxUrls;
+	public GrabManager(int maxUrls, BiPredicate<URL, Integer> shouldVisit) {
+		this.maxUrls = maxUrls;
+		this.shouldVisit = shouldVisit;
 	}
 
 	public void go(URL start) throws IOException, InterruptedException {
-
-		// stay within same site
-		urlBase = start.toString().replaceAll("(.*//.*/).*", "$1");
-
-		StopWatch stopWatch = new StopWatch();
-
-		stopWatch.start();
 		submitNewURL(start, 0);
-
-		while (checkPageGrabs()) ;
-		stopWatch.stop();
-
-		System.out.println("Found " + masterList.size() + " urls");
-		System.out.println("in " + stopWatch.getTime() / 1000 + " seconds");
+		while (checkPageGrabs())
+			;
 	}
 
+	/**
+	 * This method is charged with checking the status of all the threads
+	 * and collecting their work effort.
+	 *
+	 * @return false = all the threads are done.
+	 * @throws InterruptedException
+	 */
 	private boolean checkPageGrabs() throws InterruptedException {
 		Thread.sleep(PAUSE_TIME);
 		Set<GrabPage> pageSet = new HashSet<>();
@@ -60,7 +52,6 @@ public class GrabManager {
 				iterator.remove();
 				try {
 					pageSet.add(future.get());
-				} catch (InterruptedException e) {  // skip pages that load too slow
 				} catch (ExecutionException e) {
 				}
 			}
@@ -73,6 +64,13 @@ public class GrabManager {
 		return (futures.size() > 0);
 	}
 
+	/**
+	 * Get the URLs from the grab page object.
+	 * remove any anchor references
+	 * save the url into the to-do list.
+	 *
+	 * @param grabPage object containing the URL list
+	 */
 	private void addNewURLs(GrabPage grabPage) {
 		for (URL url : grabPage.getUrlList()) {
 			if (url.toString().contains("#")) {
@@ -82,34 +80,48 @@ public class GrabManager {
 				}
 			}
 
-			submitNewURL(url, grabPage.getDepth() + 1);
-		}
-	}
-
-	private void submitNewURL(URL url, int depth) {
-		if (shouldVisit(url, depth)) {
-			masterList.add(url);
-
-			GrabPage grabPage = new GrabPage(url, depth);
-			Future<GrabPage> future = executorService.submit(grabPage);
-			futures.add(future);
+			testAndSubmitNewURL(url, grabPage.getDepth() + 1);
 		}
 	}
 
 	/**
-	 * Redementary visitation filter.
+	 * Check if the URL passes muster and add it to the work list
+	 *
+	 * @param url
+	 * @param depth
 	 */
-	private boolean shouldVisit(URL url, int depth) {
+	private void testAndSubmitNewURL(URL url, int depth) {
+		if (internalShouldVisit(url)
+				&& shouldVisit.test(url, depth)) {  // ask the BiPredicate
+			submitNewURL(url, depth);
+		}
+	}
+
+	/**
+	 * Do the work of actually adding a work item.
+	 *
+	 * @param url
+	 * @param depth
+	 */
+	private void submitNewURL(URL url, int depth) {
+		masterList.add(url);
+
+		GrabPage grabPage = new GrabPage(url, depth);
+		Future<GrabPage> future = executorService.submit(grabPage);
+		futures.add(future);
+	}
+
+
+	/**
+	 * Some things we need to control inside the manager itself.
+	 * Like, do not visit the same page twice and stay within
+	 * the maximum.
+	 *
+	 * @param url
+	 * @return
+	 */
+	private boolean internalShouldVisit(URL url) {
 		if (masterList.contains(url)) {
-			return false;
-		}
-		if (!url.toString().startsWith(urlBase)) {
-			return false;
-		}
-		if (url.toString().endsWith(".pdf")) {
-			return false;
-		}
-		if (depth > maxDepth) {
 			return false;
 		}
 		if (masterList.size() >= maxUrls) {
@@ -125,4 +137,6 @@ public class GrabManager {
 	public Set<URL> getMasterList() {
 		return masterList;
 	}
+
+
 }
