@@ -4,8 +4,8 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
-import org.scrumbucket.crawler4neo.crawler.GrabManager;
-import org.scrumbucket.crawler4neo.crawler.GrabPage;
+import org.scrumbucket.crawler4neo.services.GrabManager;
+import org.scrumbucket.crawler4neo.services.GrabPage;
 
 import java.io.IOException;
 import java.net.URL;

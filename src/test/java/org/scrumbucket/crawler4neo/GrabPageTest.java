@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.scrumbucket.crawler4neo.crawler.GrabPage;
+import org.scrumbucket.crawler4neo.services.GrabPage;
 
 import java.net.URL;
 import java.nio.file.Files;

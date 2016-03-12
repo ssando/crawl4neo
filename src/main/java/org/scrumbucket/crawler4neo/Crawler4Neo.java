@@ -1,7 +1,7 @@
 package org.scrumbucket.crawler4neo;
 
 import org.neo4j.io.fs.FileUtils;
-import org.scrumbucket.crawler4neo.crawler.CrawlerService;
+import org.scrumbucket.crawler4neo.services.CrawlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
