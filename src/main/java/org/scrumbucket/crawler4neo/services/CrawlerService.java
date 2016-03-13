@@ -21,10 +21,6 @@ public class CrawlerService {
     private PageRepository pageRepository;
 
 
-    @PostConstruct
-    public void check() {
-        System.out.println("---------------------asdf");
-    }
     public void loadDatabase(String startingUrl, String pathHas) throws IOException, InterruptedException {
         URL start = new URL(startingUrl);
 
