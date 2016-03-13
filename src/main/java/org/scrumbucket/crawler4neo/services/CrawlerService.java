@@ -5,14 +5,13 @@ import org.scrumbucket.crawler4neo.data.Page;
 import org.scrumbucket.crawler4neo.data.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import java.util.function.BiPredicate;
 
 @Service
-@Transactional
 public class CrawlerService {
 
     public static final int MAX_URLS = 15;
@@ -22,6 +21,10 @@ public class CrawlerService {
     private PageRepository pageRepository;
 
 
+    @PostConstruct
+    public void check() {
+        System.out.println("---------------------asdf");
+    }
     public void loadDatabase(String startingUrl, String pathHas) throws IOException, InterruptedException {
         URL start = new URL(startingUrl);
 

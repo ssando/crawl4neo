@@ -81,8 +81,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
-
-
     </dependencies>
 
     <repositories>

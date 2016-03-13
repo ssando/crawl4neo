@@ -6,23 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
 @SpringBootApplication
-@Transactional
 public class Crawler4Neo implements CommandLineRunner {
-
 
     @Autowired
     private CrawlerService crawlerService;
 
     @Override
     public void run(String... strings) throws Exception {
-
         crawlerService.loadDatabase("http://news.yahoo.com", "trump");
-
     }
 
     public static void main(String[] args) throws Exception {
