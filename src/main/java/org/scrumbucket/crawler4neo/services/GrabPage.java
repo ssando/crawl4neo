@@ -1,4 +1,4 @@
-package org.scrumbucket.crawler4neo;
+package org.scrumbucket.crawler4neo.services;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;

@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.scrumbucket.crawler4neo.services.GrabPage;
 
 import java.net.URL;
 import java.nio.file.Files;
@@ -22,7 +23,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Jsoup.class)
-public class TestGrabPage {
+public class GrabPageTest {
 
 	@Test
 	public void testGrabbing() throws Exception {

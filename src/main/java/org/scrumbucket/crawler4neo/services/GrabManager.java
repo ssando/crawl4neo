@@ -1,9 +1,7 @@
-package org.scrumbucket.crawler4neo;
+package org.scrumbucket.crawler4neo.services;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,7 +13,7 @@ import java.util.concurrent.Future;
 import java.util.function.BiPredicate;
 
 public class GrabManager {
-	private static final int THREAD_COUNT = 5;
+	private static final int THREAD_COUNT = 1;
 	private final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
 	private static final long PAUSE_TIME = 1000;
 	private final Set<URL> masterList = new HashSet<>();
@@ -32,6 +30,7 @@ public class GrabManager {
 		submitNewURL(start, 0);
 		while (checkPageGrabs())
 			;
+		executorService.shutdown();
 	}
 
 	/**
@@ -130,13 +129,8 @@ public class GrabManager {
 		return true;
 	}
 
-	public void write(String path) throws IOException {
-		FileUtils.writeLines(new File(path), masterList);
-	}
-
 	public Set<URL> getMasterList() {
 		return masterList;
 	}
-
 
 }

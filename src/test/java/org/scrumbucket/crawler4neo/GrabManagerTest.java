@@ -4,6 +4,8 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.scrumbucket.crawler4neo.services.GrabManager;
+import org.scrumbucket.crawler4neo.services.GrabPage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,12 +22,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestGrabManager {
+public class GrabManagerTest {
 
 	static final int SIZE = 5;
 
 	@Test
-	@Ignore
+	@Ignore("Not to be used in normal unit tests.  Here for real executions.")
 	public void happy() throws IOException, InterruptedException {
 		BiPredicate<URL, Integer>
 			shouldVisit = (url, depth) -> url.getHost().equals("news.yahoo.com");
@@ -44,7 +46,6 @@ public class TestGrabManager {
 		System.out.println("Found " + grabManager.getMasterList().size() + " urls");
 		System.out.println("in " + stopWatch.getTime() / 1000 + " seconds");
 
-		grabManager.write("target/testoutput/urllist.txt");
 	}
 
 
